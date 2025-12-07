@@ -35,11 +35,9 @@ public class UserEntity {
     @Size(min = 8)
     private String password;
 
-    private Boolean active = true;
+    @OneToMany(mappedBy = "userEntity", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<CategoryEntity> categoryEntities = new ArrayList<>();
 
     @OneToMany(mappedBy = "userEntity", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<CategoryEntity> categoryEntities = new ArrayList<>();;
-
-    @OneToMany(mappedBy = "userEntity", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<TransactionEntity> transactionEntities = new ArrayList<>();;
+    private List<TransactionEntity> transactionEntities = new ArrayList<>();
 }

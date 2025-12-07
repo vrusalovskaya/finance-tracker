@@ -46,19 +46,4 @@ public class TransactionEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private UserEntity userEntity;
-
-    private OffsetDateTime createdAt;
-
-    private OffsetDateTime updatedAt;
-
-    @PrePersist
-    public void onCreate() {
-        createdAt = OffsetDateTime.now();
-        updatedAt = createdAt;
-    }
-
-    @PreUpdate
-    public void onUpdate() {
-        updatedAt = OffsetDateTime.now();
-    }
 }

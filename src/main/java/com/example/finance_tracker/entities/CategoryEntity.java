@@ -37,5 +37,5 @@ public class CategoryEntity {
     private UserEntity userEntity;
 
     @OneToMany(mappedBy = "categoryEntity")
-    private List<TransactionEntity> transactionEntities = new ArrayList<>();;
+    private List<TransactionEntity> transactionEntities = new ArrayList<>();
 }
