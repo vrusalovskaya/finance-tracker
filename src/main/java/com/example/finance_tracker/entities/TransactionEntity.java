@@ -9,6 +9,8 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -40,7 +42,9 @@ public class TransactionEntity {
     private String description;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "category_id")
+    @JoinColumn(name = "category_id",
+            foreignKey = @ForeignKey(name = "fk_transaction_category"))
+    @OnDelete(action = OnDeleteAction.SET_NULL)
     private CategoryEntity categoryEntity;
 
     @ManyToOne(fetch = FetchType.LAZY)
