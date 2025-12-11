@@ -35,6 +35,9 @@ public class TransactionServiceImpl implements TransactionService {
         validateAmount(transaction.getAmount());
         validateDate(transaction.getDate());
         CategoryEntity categoryEntity = findCategoryInDb(transaction.getCategoryId());
+        if (transaction.getUserId() == null) {
+            throw new ValidationException("Transaction must be assigned to user");
+        }
         UserEntity userEntity = findUserInDb(transaction.getUserId());
 
         if (!categoryEntity.getUserEntity().getId().equals(transaction.getUserId())) {
@@ -56,6 +59,10 @@ public class TransactionServiceImpl implements TransactionService {
     @Override
     @Transactional
     public Transaction update(Transaction transaction) {
+        if (transaction.getUserId() == null) {
+            throw new ValidationException("Transaction must be assigned to user");
+        }
+
         TransactionEntity transactionEntity = findTransactionInDb(transaction.getId());
 
         if (!transactionEntity.getUserEntity().getId().equals(transaction.getUserId())) {
@@ -133,14 +140,14 @@ public class TransactionServiceImpl implements TransactionService {
                 .orElseThrow(() -> new ResourceNotFoundException("Category with id " + categoryId + " was not found"));
     }
 
-    private TransactionEntity findTransactionInDb(Long transactionId){
+    private TransactionEntity findTransactionInDb(Long transactionId) {
         return transactionRepository.findById(transactionId)
-                .orElseThrow(() -> new ResourceNotFoundException("Transaction with id " + transactionId + " was not found" ));
+                .orElseThrow(() -> new ResourceNotFoundException("Transaction with id " + transactionId + " was not found"));
 
     }
 
     private void validateAmount(BigDecimal amount) {
-        if (amount.compareTo(BigDecimal.ZERO) <= 0) {
+        if (amount == null || amount.compareTo(BigDecimal.ZERO) <= 0) {
             throw new ValidationException("Amount of transaction should be positive");
         }
     }
@@ -151,8 +158,8 @@ public class TransactionServiceImpl implements TransactionService {
         }
     }
 
-    private void validateDates(LocalDate startDate, LocalDate endDate){
-        if (startDate.isAfter(endDate)){
+    private void validateDates(LocalDate startDate, LocalDate endDate) {
+        if (startDate.isAfter(endDate)) {
             throw new ValidationException("Start date for filtration cannot be after end date");
         }
     }

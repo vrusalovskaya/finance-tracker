@@ -1,6 +1,5 @@
 package com.example.finance_tracker.services;
 
-import com.example.finance_tracker.common.Type;
 import com.example.finance_tracker.models.Category;
 
 import java.util.List;

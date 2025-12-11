@@ -1,6 +1,5 @@
 package com.example.finance_tracker.services;
 
-import com.example.finance_tracker.common.Type;
 import com.example.finance_tracker.entities.CategoryEntity;
 import com.example.finance_tracker.entities.UserEntity;
 import com.example.finance_tracker.exceptions.AccessDeniedException;
@@ -10,9 +9,9 @@ import com.example.finance_tracker.mappers.CategoryMapper;
 import com.example.finance_tracker.models.Category;
 import com.example.finance_tracker.repositories.CategoryRepository;
 import com.example.finance_tracker.repositories.UserRepository;
-import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -28,6 +27,9 @@ public class CategoryServiceImpl implements CategoryService {
     @Transactional
     public Category create(Category category) {
         validateName(category.getName());
+        if (category.getUserId() == null) {
+            throw new ValidationException("Category must be assigned to user");
+        }
         UserEntity userEntity = findUserInDb(category.getUserId());
 
         CategoryEntity categoryEntity = new CategoryEntity();
@@ -43,6 +45,10 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     @Transactional
     public Category update(Category category) {
+        if (category.getUserId() == null) {
+            throw new ValidationException("Category must be assigned to user");
+        }
+
         CategoryEntity categoryEntity = findCategoryInDb(category.getId());
 
         if (!categoryEntity.getUserEntity().getId().equals(category.getUserId())) {
@@ -82,7 +88,7 @@ public class CategoryServiceImpl implements CategoryService {
                 .orElseThrow(() -> new ResourceNotFoundException("User with id " + userId + " was not found"));
     }
 
-    private CategoryEntity findCategoryInDb(Long categoryId){
+    private CategoryEntity findCategoryInDb(Long categoryId) {
         return categoryRepository.findById(categoryId)
                 .orElseThrow(() -> new ResourceNotFoundException("Category with id " + categoryId + " was not found"));
     }
