@@ -10,7 +10,7 @@ public class MonthlyTrendProjection {
     private final YearMonth yearMonth;
     private final BigDecimal total;
 
-    public MonthlyTrendProjection(Long year, Long month, BigDecimal total) {
+    public MonthlyTrendProjection(Number year, Number month, BigDecimal total) {
         this.yearMonth = YearMonth.of(year.intValue(), month.intValue());
         this.total = total;
     }
