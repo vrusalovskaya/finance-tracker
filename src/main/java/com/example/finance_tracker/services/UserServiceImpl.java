@@ -6,6 +6,7 @@ import com.example.finance_tracker.mappers.UserMapper;
 import com.example.finance_tracker.models.User;
 import com.example.finance_tracker.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -13,7 +14,7 @@ import org.springframework.stereotype.Service;
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
-    //    private final PasswordEncoder passwordEncoder;
+    private final PasswordEncoder passwordEncoder;
     private final UserMapper userMapper;
 
     @Override
@@ -21,8 +22,7 @@ public class UserServiceImpl implements UserService {
         UserEntity user = new UserEntity();
         user.setUserName(userName);
         user.setEmail(email);
-//        user.setPassword(passwordEncoder.encode(rawPassword));
-        user.setPassword(rawPassword);
+        user.setPassword(passwordEncoder.encode(rawPassword));
         return userMapper.toModel(userRepository.save(user));
     }
 
