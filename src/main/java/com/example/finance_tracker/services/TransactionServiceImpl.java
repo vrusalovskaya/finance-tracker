@@ -159,7 +159,7 @@ public class TransactionServiceImpl implements TransactionService {
     }
 
     private void validateDates(LocalDate startDate, LocalDate endDate) {
-        if (startDate.isAfter(endDate)) {
+        if (startDate!= null && startDate.isAfter(endDate)) {
             throw new ValidationException("Start date for filtration cannot be after end date");
         }
     }

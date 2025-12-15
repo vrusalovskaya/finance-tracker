@@ -28,7 +28,7 @@ public class UserEntity {
     private String userName;
 
     @Email
-    @Column(nullable = false, unique = true)
+    @Column(length = 50, nullable = false, unique = true)
     private String email;
 
     @NotBlank

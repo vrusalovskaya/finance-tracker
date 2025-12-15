@@ -1,5 +1,7 @@
 package com.example.finance_tracker.mappers;
 
+import com.example.finance_tracker.dtos.TransactionRequest;
+import com.example.finance_tracker.dtos.TransactionResponse;
 import com.example.finance_tracker.entities.TransactionEntity;
 import com.example.finance_tracker.models.Transaction;
 import org.mapstruct.Mapper;
@@ -15,4 +17,7 @@ public interface TransactionMapper {
     @Mapping(target = "categoryEntity", ignore = true)
     @Mapping(target = "userEntity", ignore = true)
     TransactionEntity toEntity(Transaction model);
+
+    Transaction toModel(TransactionRequest request);
+    TransactionResponse toResponse(Transaction transaction);
 }

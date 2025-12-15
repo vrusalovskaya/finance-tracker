@@ -35,6 +35,7 @@ public class TransactionEntity {
     private BigDecimal amount;
 
     @PastOrPresent
+    @Column(nullable = false)
     private LocalDate date;
 
     @Size(max = 255)
@@ -47,6 +48,6 @@ public class TransactionEntity {
     private CategoryEntity categoryEntity;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "user_id", nullable = false)
     private UserEntity userEntity;
 }
