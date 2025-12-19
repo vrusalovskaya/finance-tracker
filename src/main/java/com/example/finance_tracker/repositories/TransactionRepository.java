@@ -10,11 +10,16 @@ import org.springframework.data.repository.query.Param;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 @NullMarked
 public interface TransactionRepository extends JpaRepository<TransactionEntity, Long> {
     @EntityGraph(attributePaths = {"categoryEntity", "userEntity"})
     List<TransactionEntity> findByUserEntityId(Long userId);
+
+    Optional<TransactionEntity> findByIdAndUserEntityId(Long id, Long userId);
+
+    Boolean existsByIdAndUserEntityId(Long id, Long userId);
 
     @EntityGraph(attributePaths = {"categoryEntity", "userEntity"})
     List<TransactionEntity> findByUserEntityIdAndType(Long userId, Type type);

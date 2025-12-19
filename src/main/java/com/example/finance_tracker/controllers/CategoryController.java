@@ -4,6 +4,7 @@ import com.example.finance_tracker.dtos.CategoryRequest;
 import com.example.finance_tracker.dtos.CategoryResponse;
 import com.example.finance_tracker.mappers.CategoryMapper;
 import com.example.finance_tracker.models.Category;
+import com.example.finance_tracker.security.CurrentUserProvider;
 import com.example.finance_tracker.services.CategoryService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -19,10 +20,14 @@ import java.util.List;
 public class CategoryController {
     private final CategoryService categoryService;
     private final CategoryMapper categoryMapper;
+    private final CurrentUserProvider currentUser;
 
     @PostMapping
     public ResponseEntity<CategoryResponse> create(@Valid @RequestBody CategoryRequest categoryRequest) {
+        Long userId = currentUser.getCurrentUserId();
+
         Category category = categoryMapper.toModel(categoryRequest);
+        category.setUserId(userId);
         Category createdCategory = categoryService.create(category);
 
         CategoryResponse categoryResponse = categoryMapper.toResponse(createdCategory);
@@ -33,8 +38,11 @@ public class CategoryController {
 
     @PutMapping("/{id}")
     public ResponseEntity<CategoryResponse> update(@PathVariable Long id, @Valid @RequestBody CategoryRequest categoryRequest) {
+        Long userId = currentUser.getCurrentUserId();
+
         Category category = categoryMapper.toModel(categoryRequest);
         category.setId(id);
+        category.setUserId(userId);
         Category updatedCategory = categoryService.update(category);
 
         CategoryResponse categoryResponse = categoryMapper.toResponse(updatedCategory);
@@ -42,13 +50,15 @@ public class CategoryController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> delete(@PathVariable Long id, @RequestParam Long userId) {
+    public ResponseEntity<Void> delete(@PathVariable Long id) {
+        Long userId = currentUser.getCurrentUserId();
         categoryService.delete(id, userId);
         return ResponseEntity.noContent().build();
     }
 
     @GetMapping
-    public List<CategoryResponse> getByUser(@RequestParam Long userId) {
+    public List<CategoryResponse> get() {
+        Long userId = currentUser.getCurrentUserId();
         return categoryService.getByUser(userId).stream().map(categoryMapper::toResponse).toList();
     }
 }

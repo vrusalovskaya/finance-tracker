@@ -24,9 +24,6 @@ public record TransactionRequest(
         @Size(max = 255, message = "Description length should not exceed 255 characters")
         String description,
 
-        Long categoryId,
-
-        @NotNull(message = "User reference is mandatory")
-        Long userId
+        Long categoryId
 ) {
 }

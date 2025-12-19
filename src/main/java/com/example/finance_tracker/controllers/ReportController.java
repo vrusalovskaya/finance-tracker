@@ -9,6 +9,7 @@ import com.example.finance_tracker.models.CategorySummary;
 import com.example.finance_tracker.models.MonthlySummary;
 import com.example.finance_tracker.models.MonthlyTrend;
 import com.example.finance_tracker.models.PeriodSummary;
+import com.example.finance_tracker.security.CurrentUserProvider;
 import com.example.finance_tracker.services.ReportService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -26,11 +27,12 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ReportController {
     private final ReportService reportService;
+    private final CurrentUserProvider currentUser;
 
     @GetMapping("/monthly-summary")
     public MonthlySummaryResponse getMonthlySummary(
-            @RequestParam Long userId,
             @RequestParam @DateTimeFormat(pattern = "yyyy-MM") YearMonth month) {
+        Long userId = currentUser.getCurrentUserId();
         MonthlySummary monthlySummary = reportService.getMonthlySummary(userId, month);
         return new MonthlySummaryResponse(
                 monthlySummary.month(),
@@ -41,10 +43,10 @@ public class ReportController {
 
     @GetMapping("/monthly-category-summary")
     public List<CategorySummaryResponse> getMonthlyCategorySummary(
-            @RequestParam Long userId,
             @RequestParam @DateTimeFormat(pattern = "yyyy-MM") YearMonth month,
             @RequestParam String type
     ) {
+        Long userId = currentUser.getCurrentUserId();
         Type parsedType = Type.from(type);
         return reportService.getMonthlySummaryByCategory(userId, month, parsedType)
                 .stream().map(this::toResponse).toList();
@@ -52,10 +54,10 @@ public class ReportController {
 
     @GetMapping("/period-summary")
     public PeriodSummaryResponse getPeriodSummary(
-            @RequestParam Long userId,
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate
     ) {
+        Long userId = currentUser.getCurrentUserId();
         PeriodSummary periodSummary = reportService.getSummaryForPeriod(userId, startDate, endDate);
         return new PeriodSummaryResponse(periodSummary.from(), periodSummary.to(),
                 periodSummary.income(), periodSummary.expense(), periodSummary.balance());
@@ -63,11 +65,11 @@ public class ReportController {
 
     @GetMapping("/monthly-trend")
     public List<MonthlyTrendResponse> getMonthlyTrend(
-            @RequestParam Long userId,
             @RequestParam @DateTimeFormat(pattern = "yyyy-MM") YearMonth from,
             @RequestParam @DateTimeFormat(pattern = "yyyy-MM") YearMonth to,
             @RequestParam String type
     ) {
+        Long userId = currentUser.getCurrentUserId();
         Type parsedType = Type.from(type);
         return reportService.getMonthlyTrend(userId, from, to, parsedType)
                 .stream().map(this::toResponse).toList();

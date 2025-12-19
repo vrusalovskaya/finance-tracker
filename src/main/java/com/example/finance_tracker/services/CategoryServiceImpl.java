@@ -2,7 +2,6 @@ package com.example.finance_tracker.services;
 
 import com.example.finance_tracker.entities.CategoryEntity;
 import com.example.finance_tracker.entities.UserEntity;
-import com.example.finance_tracker.exceptions.AccessDeniedException;
 import com.example.finance_tracker.exceptions.ResourceNotFoundException;
 import com.example.finance_tracker.exceptions.ValidationException;
 import com.example.finance_tracker.mappers.CategoryMapper;
@@ -27,9 +26,7 @@ public class CategoryServiceImpl implements CategoryService {
     @Transactional
     public Category create(Category category) {
         validateName(category.getName());
-        if (category.getUserId() == null) {
-            throw new ValidationException("Category must be assigned to user");
-        }
+
         UserEntity userEntity = findUserInDb(category.getUserId());
 
         CategoryEntity categoryEntity = new CategoryEntity();
@@ -45,15 +42,7 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     @Transactional
     public Category update(Category category) {
-        if (category.getUserId() == null) {
-            throw new ValidationException("Category must be assigned to user");
-        }
-
-        CategoryEntity categoryEntity = findCategoryInDb(category.getId());
-
-        if (!categoryEntity.getUserEntity().getId().equals(category.getUserId())) {
-            throw new AccessDeniedException("Access denied");
-        }
+        CategoryEntity categoryEntity = findCategoryInDb(category.getId(), category.getUserId());
 
         validateName(category.getName());
 
@@ -67,13 +56,12 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     @Transactional
     public void delete(Long categoryId, Long userId) {
-        CategoryEntity categoryEntity = findCategoryInDb(categoryId);
-
-        if (!categoryEntity.getUserEntity().getId().equals(userId)) {
-            throw new AccessDeniedException("Access denied");
+        if (categoryRepository.existsByIdAndUserEntityId(categoryId, userId)) {
+            categoryRepository.deleteById(categoryId);
+        } else {
+            throw new ResourceNotFoundException(
+                    "Category with id " + categoryId + " was not found for user with id " + userId);
         }
-
-        categoryRepository.delete(categoryEntity);
     }
 
     @Override
@@ -88,9 +76,10 @@ public class CategoryServiceImpl implements CategoryService {
                 .orElseThrow(() -> new ResourceNotFoundException("User with id " + userId + " was not found"));
     }
 
-    private CategoryEntity findCategoryInDb(Long categoryId) {
-        return categoryRepository.findById(categoryId)
-                .orElseThrow(() -> new ResourceNotFoundException("Category with id " + categoryId + " was not found"));
+    private CategoryEntity findCategoryInDb(Long categoryId, Long userId) {
+        return categoryRepository.findByIdAndUserEntityId(categoryId, userId)
+                .orElseThrow(() -> new ResourceNotFoundException(
+                        "Category with id " + categoryId + " was not found for user with id " + userId));
     }
 
     private void validateName(String name) {

@@ -1,7 +1,6 @@
 package com.example.finance_tracker.services;
 
 import com.example.finance_tracker.common.Type;
-import com.example.finance_tracker.exceptions.ResourceNotFoundException;
 import com.example.finance_tracker.exceptions.ValidationException;
 import com.example.finance_tracker.models.CategorySummary;
 import com.example.finance_tracker.models.MonthlySummary;
@@ -9,7 +8,6 @@ import com.example.finance_tracker.models.MonthlyTrend;
 import com.example.finance_tracker.models.PeriodSummary;
 import com.example.finance_tracker.projections.MonthlyTrendProjection;
 import com.example.finance_tracker.repositories.ReportRepository;
-import com.example.finance_tracker.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -27,13 +25,10 @@ import java.util.stream.Collectors;
 public class ReportServiceImpl implements ReportService {
 
     private final ReportRepository reportRepository;
-    private final UserRepository userRepository;
 
     @Override
     @Transactional(readOnly = true)
     public MonthlySummary getMonthlySummary(Long userId, YearMonth month) {
-        validateUserPresence(userId);
-
         LocalDate from = month.atDay(1);
         LocalDate to = month.atEndOfMonth();
 
@@ -46,8 +41,6 @@ public class ReportServiceImpl implements ReportService {
     @Override
     @Transactional(readOnly = true)
     public List<CategorySummary> getMonthlySummaryByCategory(Long userId, YearMonth month, Type type) {
-        validateUserPresence(userId);
-
         LocalDate from = month.atDay(1);
         LocalDate to = month.atEndOfMonth();
 
@@ -63,7 +56,6 @@ public class ReportServiceImpl implements ReportService {
     @Transactional(readOnly = true)
     public PeriodSummary getSummaryForPeriod(Long userId, LocalDate from, LocalDate to) {
         validateDates(from, to);
-        validateUserPresence(userId);
 
         BigDecimal income = reportRepository.sumByTypeAndDateRange(userId, Type.INCOME, from, to);
         BigDecimal expense = reportRepository.sumByTypeAndDateRange(userId, Type.EXPENSE, from, to);
@@ -74,7 +66,6 @@ public class ReportServiceImpl implements ReportService {
     @Override
     @Transactional(readOnly = true)
     public List<MonthlyTrend> getMonthlyTrend(Long userId, YearMonth from, YearMonth to, Type type) {
-        validateUserPresence(userId);
         validateMonths(from, to);
 
         List<MonthlyTrendProjection> raw = reportRepository
@@ -95,12 +86,6 @@ public class ReportServiceImpl implements ReportService {
         }
 
         return result;
-    }
-
-    private void validateUserPresence(Long userId) {
-        if (!userRepository.existsById(userId)) {
-            throw new ResourceNotFoundException("User with id " + userId + " was not found");
-        }
     }
 
     private void validateDates(LocalDate from, LocalDate to) {

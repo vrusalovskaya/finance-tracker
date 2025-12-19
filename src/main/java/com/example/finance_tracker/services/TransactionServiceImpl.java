@@ -34,15 +34,8 @@ public class TransactionServiceImpl implements TransactionService {
     public Transaction create(Transaction transaction) {
         validateAmount(transaction.getAmount());
         validateDate(transaction.getDate());
-        CategoryEntity categoryEntity = findCategoryInDb(transaction.getCategoryId());
-        if (transaction.getUserId() == null) {
-            throw new ValidationException("Transaction must be assigned to user");
-        }
+        CategoryEntity categoryEntity = findCategoryInDb(transaction.getCategoryId(), transaction.getUserId());
         UserEntity userEntity = findUserInDb(transaction.getUserId());
-
-        if (!categoryEntity.getUserEntity().getId().equals(transaction.getUserId())) {
-            throw new ValidationException("Category does not belong to user");
-        }
 
         TransactionEntity transactionEntity = new TransactionEntity();
         transactionEntity.setType(transaction.getType());
@@ -59,25 +52,14 @@ public class TransactionServiceImpl implements TransactionService {
     @Override
     @Transactional
     public Transaction update(Transaction transaction) {
-        if (transaction.getUserId() == null) {
-            throw new ValidationException("Transaction must be assigned to user");
-        }
-
-        TransactionEntity transactionEntity = findTransactionInDb(transaction.getId());
-
-        if (!transactionEntity.getUserEntity().getId().equals(transaction.getUserId())) {
-            throw new AccessDeniedException("Access denied");
-        }
+        TransactionEntity transactionEntity = findTransactionInDb(
+                transaction.getId(), transaction.getUserId());
 
         validateAmount(transaction.getAmount());
         validateDate(transaction.getDate());
         CategoryEntity categoryEntity = null;
         if (transaction.getCategoryId() != null) {
-            categoryEntity = findCategoryInDb(transaction.getCategoryId());
-
-            if (!categoryEntity.getUserEntity().getId().equals(transaction.getUserId())) {
-                throw new ValidationException("Category does not belong to user");
-            }
+            categoryEntity = findCategoryInDb(transaction.getCategoryId(), transaction.getUserId());
         }
 
         transactionEntity.setType(transaction.getType());
@@ -92,13 +74,13 @@ public class TransactionServiceImpl implements TransactionService {
     @Override
     @Transactional
     public void delete(Long transactionId, Long userId) {
-        TransactionEntity transactionEntity = findTransactionInDb(transactionId);
-
-        if (!transactionEntity.getUserEntity().getId().equals(userId)) {
-            throw new AccessDeniedException("Access denied");
+        if (transactionRepository.existsByIdAndUserEntityId(transactionId, userId)) {
+            transactionRepository.deleteById(transactionId);
         }
-
-        transactionRepository.deleteById(transactionId);
+        else {
+            throw new ResourceNotFoundException(
+                    "Transaction with id " + transactionId + " was not found for user with id " + userId);
+        }
     }
 
     @Override
@@ -135,15 +117,16 @@ public class TransactionServiceImpl implements TransactionService {
                 .orElseThrow(() -> new ResourceNotFoundException("User with id " + userId + " was not found"));
     }
 
-    private CategoryEntity findCategoryInDb(Long categoryId) {
-        return categoryRepository.findById(categoryId)
-                .orElseThrow(() -> new ResourceNotFoundException("Category with id " + categoryId + " was not found"));
+    private CategoryEntity findCategoryInDb(Long categoryId, Long userId) {
+        return categoryRepository.findByIdAndUserEntityId(categoryId, userId)
+                .orElseThrow(() -> new ResourceNotFoundException(
+                        "Category with id " + categoryId + " was not found for user with id " + userId));
     }
 
-    private TransactionEntity findTransactionInDb(Long transactionId) {
-        return transactionRepository.findById(transactionId)
-                .orElseThrow(() -> new ResourceNotFoundException("Transaction with id " + transactionId + " was not found"));
-
+    private TransactionEntity findTransactionInDb(Long transactionId, Long userId) {
+        return transactionRepository.findByIdAndUserEntityId(transactionId, userId)
+                .orElseThrow(() -> new ResourceNotFoundException(
+                        "Transaction with id " + transactionId + " was not found for user with id " + userId));
     }
 
     private void validateAmount(BigDecimal amount) {

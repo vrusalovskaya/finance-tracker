@@ -14,9 +14,6 @@ public record CategoryRequest(
         Type type,
 
         @Size(max = 255, message = "Description length should not exceed 255 characters")
-        String description,
-
-        @NotNull(message = "User reference is mandatory")
-        Long userId
+        String description
 ) {
 }

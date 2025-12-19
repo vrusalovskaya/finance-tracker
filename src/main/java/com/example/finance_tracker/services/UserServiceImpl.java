@@ -19,16 +19,14 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User create(String userName, String email, String rawPassword) {
+        if (userRepository.existsByEmail(email)) {
+            throw new IllegalArgumentException("Email already in use");
+        }
+
         UserEntity user = new UserEntity();
         user.setUserName(userName);
         user.setEmail(email);
         user.setPassword(passwordEncoder.encode(rawPassword));
         return userMapper.toModel(userRepository.save(user));
-    }
-
-    @Override
-    public User get(Long id) {
-        return userRepository.findById(id).map(userMapper::toModel)
-                .orElseThrow(() -> new ResourceNotFoundException("User with id " + id + " was not found"));
     }
 }
