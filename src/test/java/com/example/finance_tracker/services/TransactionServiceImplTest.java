@@ -79,27 +79,14 @@ class TransactionServiceImplTest {
         transaction.setAmount(BigDecimal.ONE);
         transaction.setDate(LocalDate.now().minusDays(1));
         transaction.setCategoryId(1L);
-        when(categoryRepository.findById(1L)).thenReturn(Optional.empty());
+        transaction.setUserId(1L);
+        when(categoryRepository.findByIdAndUserEntityId(1L, 1L))
+                .thenReturn(Optional.empty());
 
         ResourceNotFoundException ex = assertThrows(ResourceNotFoundException.class,
                 () -> transactionService.create(transaction));
 
-        assertTrue(ex.getMessage().contains("Category with id 1 was not found"));
-        verify(transactionRepository, never()).save(any());
-    }
-
-    @Test
-    void create_shouldThrow_WhenUserIdIsNull() {
-        Transaction transaction = new Transaction();
-        transaction.setAmount(BigDecimal.ONE);
-        transaction.setDate(LocalDate.now().minusDays(1));
-        transaction.setCategoryId(1L);
-        when(categoryRepository.findById(1L)).thenReturn(Optional.of(new CategoryEntity()));
-
-        ValidationException ex = assertThrows(ValidationException.class,
-                () -> transactionService.create(transaction));
-
-        assertTrue(ex.getMessage().contains("Transaction must be assigned to user"));
+        assertTrue(ex.getMessage().contains("Category with id 1 was not found for user with id 1"));
         verify(transactionRepository, never()).save(any());
     }
 
@@ -111,7 +98,7 @@ class TransactionServiceImplTest {
         transaction.setCategoryId(1L);
         transaction.setUserId(1L);
 
-        when(categoryRepository.findById(1L)).thenReturn(
+        when(categoryRepository.findByIdAndUserEntityId(1L, 1L)).thenReturn(
                 Optional.of(new CategoryEntity()));
         when(userRepository.findById(1L)).thenReturn(Optional.empty());
 
@@ -119,33 +106,6 @@ class TransactionServiceImplTest {
                 () -> transactionService.create(transaction));
 
         assertTrue(ex.getMessage().contains("User with id 1 was not found"));
-    }
-
-    @Test
-    void create_shouldThrow_WhenCategoryDoesNotBelongToUser() {
-        UserEntity userEntity1 = new UserEntity();
-        userEntity1.setId(1L);
-
-        UserEntity userEntity2 = new UserEntity();
-        userEntity2.setId(2L);
-
-        CategoryEntity categoryEntity = new CategoryEntity();
-        categoryEntity.setUserEntity(userEntity1);
-
-        Transaction transaction = new Transaction();
-        transaction.setAmount(BigDecimal.ONE);
-        transaction.setDate(LocalDate.now().minusDays(1));
-        transaction.setCategoryId(1L);
-        transaction.setUserId(2L);
-
-        when(categoryRepository.findById(1L)).thenReturn(
-                Optional.of(categoryEntity));
-        when(userRepository.findById(2L)).thenReturn(Optional.of(userEntity2));
-
-        ValidationException ex = assertThrows(ValidationException.class,
-                () -> transactionService.create(transaction));
-
-        assertTrue(ex.getMessage().contains("Category does not belong to user"));
     }
 
     @Test
@@ -162,7 +122,7 @@ class TransactionServiceImplTest {
         transaction.setCategoryId(1L);
         transaction.setUserId(1L);
 
-        when(categoryRepository.findById(1L)).thenReturn(
+        when(categoryRepository.findByIdAndUserEntityId(1L, 1L)).thenReturn(
                 Optional.of(categoryEntity));
         when(userRepository.findById(1L)).thenReturn(Optional.of(userEntity));
 
