@@ -19,7 +19,7 @@ public class AuthController {
     private final AuthenticationFacade auth;
 
     @PostMapping("/login")
-    public TokenResponse login(@RequestBody LoginRequest request) {
+    public TokenResponse login(@Valid @RequestBody LoginRequest request) {
         return new TokenResponse(
                 auth.login(request.email(), request.password())
         );
