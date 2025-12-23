@@ -12,7 +12,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 class AuthControllerTest extends BaseE2ETest {
 
     @Test
-    void register_success_returns_jwt() throws Exception {
+    void register_whenValidRequest_thenReturnsJwt() throws Exception {
         mockMvc.perform(post("/api/v1/auth/register")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
@@ -28,7 +28,7 @@ class AuthControllerTest extends BaseE2ETest {
     }
 
     @Test
-    void register_duplicate_email_returns_400() throws Exception {
+    void register_whenEmailAlreadyExists_thenReturns400() throws Exception {
         registerAndGetToken("dup@test.com");
 
         mockMvc.perform(post("/api/v1/auth/register")
@@ -44,7 +44,7 @@ class AuthControllerTest extends BaseE2ETest {
     }
 
     @Test
-    void register_invalid_email_returns_400() throws Exception {
+    void register_whenEmailIsInvalid_thenReturns400() throws Exception {
         mockMvc.perform(post("/api/v1/auth/register")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
@@ -58,7 +58,7 @@ class AuthControllerTest extends BaseE2ETest {
     }
 
     @Test
-    void register_short_password_returns_400() throws Exception {
+    void register_whenPasswordIsTooShort_thenReturns400() throws Exception {
         mockMvc.perform(post("/api/v1/auth/register")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
@@ -72,7 +72,7 @@ class AuthControllerTest extends BaseE2ETest {
     }
 
     @Test
-    void register_missing_fields_returns_400() throws Exception {
+    void register_whenRequiredFieldsMissing_thenReturns400() throws Exception {
         mockMvc.perform(post("/api/v1/auth/register")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
@@ -85,7 +85,7 @@ class AuthControllerTest extends BaseE2ETest {
 
 
     @Test
-    void login_success_returns_jwt() throws Exception {
+    void login_whenValidCredentials_thenReturnsJwt() throws Exception {
         registerAndGetToken("login@test.com");
 
         mockMvc.perform(post("/api/v1/auth/login")
@@ -101,7 +101,7 @@ class AuthControllerTest extends BaseE2ETest {
     }
 
     @Test
-    void login_wrong_password_returns_401() throws Exception {
+    void login_whenPasswordIsWrong_thenReturns401() throws Exception {
         registerAndGetToken("wrongpass@test.com");
 
         mockMvc.perform(post("/api/v1/auth/login")
@@ -116,7 +116,7 @@ class AuthControllerTest extends BaseE2ETest {
     }
 
     @Test
-    void login_non_existing_user_returns_401() throws Exception {
+    void login_whenUserDoesNotExist_thenReturns401() throws Exception {
         mockMvc.perform(post("/api/v1/auth/login")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
@@ -129,7 +129,7 @@ class AuthControllerTest extends BaseE2ETest {
     }
 
     @Test
-    void login_invalid_request_body_returns_400() throws Exception {
+    void login_whenRequestBodyIsInvalid_thenReturns400() throws Exception {
         mockMvc.perform(post("/api/v1/auth/login")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""

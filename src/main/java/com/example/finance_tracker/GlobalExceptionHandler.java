@@ -1,16 +1,15 @@
 package com.example.finance_tracker;
 
-import com.example.finance_tracker.exceptions.AccessDeniedException;
 import com.example.finance_tracker.exceptions.ResourceNotFoundException;
 import com.example.finance_tracker.exceptions.ValidationException;
 import jakarta.validation.ConstraintViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-import tools.jackson.databind.exc.ValueInstantiationException;
 
 import java.sql.SQLIntegrityConstraintViolationException;
 
@@ -22,15 +21,14 @@ public class GlobalExceptionHandler {
     public void handleAuthException() {
     }
 
+    @ExceptionHandler(AccessDeniedException.class)
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    public void handleAccessDenied() {
+    }
+
     @ExceptionHandler(ResourceNotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public String handleNotFound(ResourceNotFoundException ex) {
-        return ex.getMessage();
-    }
-
-    @ExceptionHandler(AccessDeniedException.class)
-    @ResponseStatus(HttpStatus.FORBIDDEN)
-    public String handleAccessDenied(AccessDeniedException ex) {
         return ex.getMessage();
     }
 

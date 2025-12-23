@@ -4,7 +4,6 @@ import com.example.finance_tracker.common.Type;
 import com.example.finance_tracker.entities.CategoryEntity;
 import com.example.finance_tracker.entities.TransactionEntity;
 import com.example.finance_tracker.entities.UserEntity;
-import com.example.finance_tracker.exceptions.AccessDeniedException;
 import com.example.finance_tracker.exceptions.ResourceNotFoundException;
 import com.example.finance_tracker.exceptions.ValidationException;
 import com.example.finance_tracker.mappers.TransactionMapper;
