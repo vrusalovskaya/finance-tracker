@@ -1,5 +1,6 @@
 package com.example.finance_tracker;
 
+import com.example.finance_tracker.exceptions.ExportException;
 import com.example.finance_tracker.exceptions.ResourceNotFoundException;
 import com.example.finance_tracker.exceptions.ValidationException;
 import jakarta.validation.ConstraintViolationException;
@@ -33,7 +34,7 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler({ValidationException.class, ConstraintViolationException.class,
-            SQLIntegrityConstraintViolationException .class, IllegalArgumentException.class})
+            SQLIntegrityConstraintViolationException.class, IllegalArgumentException.class})
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public String handleValidation(Exception ex) {
         return ex.getMessage();
@@ -53,6 +54,12 @@ public class GlobalExceptionHandler {
         }
 
         return "Malformed JSON request";
+    }
+
+    @ExceptionHandler(ExportException.class)
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    public String handleExportException(ExportException ex) {
+        return ex.getMessage();
     }
 }
 

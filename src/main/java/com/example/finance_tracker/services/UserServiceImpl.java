@@ -1,7 +1,6 @@
 package com.example.finance_tracker.services;
 
 import com.example.finance_tracker.entities.UserEntity;
-import com.example.finance_tracker.exceptions.ResourceNotFoundException;
 import com.example.finance_tracker.mappers.UserMapper;
 import com.example.finance_tracker.models.User;
 import com.example.finance_tracker.repositories.UserRepository;

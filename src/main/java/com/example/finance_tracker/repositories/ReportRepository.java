@@ -37,19 +37,19 @@ public interface ReportRepository extends JpaRepository<TransactionEntity, Long>
     List<CategorySummaryProjection> monthlySummaryByCategory(Long userId, Type type, LocalDate from, LocalDate to);
 
     @Query("""
-    SELECT new com.example.finance_tracker.projections.MonthlyTrendProjection(
-        EXTRACT(YEAR FROM t.date),
-        EXTRACT(MONTH FROM t.date),
-        COALESCE(SUM(t.amount), 0)
-    )
-    FROM TransactionEntity t
-    WHERE t.userEntity.id = :userId
-      AND t.type = :type
-      AND t.date >= :from
-      AND t.date <= :to
-    GROUP BY EXTRACT(YEAR FROM t.date), EXTRACT(MONTH FROM t.date)
-    ORDER BY EXTRACT(YEAR FROM t.date), EXTRACT(MONTH FROM t.date)
-""")
+                SELECT new com.example.finance_tracker.projections.MonthlyTrendProjection(
+                    EXTRACT(YEAR FROM t.date),
+                    EXTRACT(MONTH FROM t.date),
+                    COALESCE(SUM(t.amount), 0)
+                )
+                FROM TransactionEntity t
+                WHERE t.userEntity.id = :userId
+                  AND t.type = :type
+                  AND t.date >= :from
+                  AND t.date <= :to
+                GROUP BY EXTRACT(YEAR FROM t.date), EXTRACT(MONTH FROM t.date)
+                ORDER BY EXTRACT(YEAR FROM t.date), EXTRACT(MONTH FROM t.date)
+            """)
     List<MonthlyTrendProjection> getMonthlyAggregates(
             Long userId,
             Type type,

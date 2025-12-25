@@ -9,4 +9,5 @@ public record PeriodSummary(
         BigDecimal income,
         BigDecimal expense,
         BigDecimal balance
-) {}
+) {
+}

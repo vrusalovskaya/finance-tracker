@@ -7,9 +7,10 @@ import org.springframework.http.MediaType;
 
 import java.time.LocalDate;
 
-import static org.hamcrest.Matchers.*;
+import static org.hamcrest.Matchers.hasSize;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 class TransactionControllerTest extends BaseE2ETest {
 
@@ -29,14 +30,14 @@ class TransactionControllerTest extends BaseE2ETest {
                         .header("Authorization", "Bearer " + token)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
-                            {
-                              "type": "EXPENSE",
-                              "amount": 50.25,
-                              "date": "%s",
-                              "description": "Groceries",
-                              "categoryId": %d
-                            }
-                        """.formatted(LocalDate.now(), categoryId)))
+                                    {
+                                      "type": "EXPENSE",
+                                      "amount": 50.25,
+                                      "date": "%s",
+                                      "description": "Groceries",
+                                      "categoryId": %d
+                                    }
+                                """.formatted(LocalDate.now(), categoryId)))
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.id").exists())
                 .andExpect(jsonPath("$.amount").value(50.25))
@@ -53,13 +54,13 @@ class TransactionControllerTest extends BaseE2ETest {
                         .header("Authorization", "Bearer " + token)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
-                            {
-                              "type": "EXPENSE",
-                              "amount": -10,
-                              "date": "%s",
-                              "categoryId": %d
-                            }
-                        """.formatted(LocalDate.now(), categoryId)))
+                                    {
+                                      "type": "EXPENSE",
+                                      "amount": -10,
+                                      "date": "%s",
+                                      "categoryId": %d
+                                    }
+                                """.formatted(LocalDate.now(), categoryId)))
                 .andExpect(status().isBadRequest());
     }
 
@@ -72,13 +73,13 @@ class TransactionControllerTest extends BaseE2ETest {
                         .header("Authorization", "Bearer " + token)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
-                            {
-                              "type": "EXPENSE",
-                              "amount": 10,
-                              "date": "%s",
-                              "categoryId": %d
-                            }
-                        """.formatted(LocalDate.now().plusDays(1), categoryId)))
+                                    {
+                                      "type": "EXPENSE",
+                                      "amount": 10,
+                                      "date": "%s",
+                                      "categoryId": %d
+                                    }
+                                """.formatted(LocalDate.now().plusDays(1), categoryId)))
                 .andExpect(status().isBadRequest());
     }
 
@@ -188,13 +189,13 @@ class TransactionControllerTest extends BaseE2ETest {
                         .header("Authorization", "Bearer " + token)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
-                            {
-                              "type": "EXPENSE",
-                              "amount": 25,
-                              "date": "%s",
-                              "categoryId": %d
-                            }
-                        """.formatted(LocalDate.now(), categoryId)))
+                                    {
+                                      "type": "EXPENSE",
+                                      "amount": 25,
+                                      "date": "%s",
+                                      "categoryId": %d
+                                    }
+                                """.formatted(LocalDate.now(), categoryId)))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.amount").value(25));
     }
@@ -211,12 +212,12 @@ class TransactionControllerTest extends BaseE2ETest {
                         .header("Authorization", "Bearer " + attackerToken)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
-                            {
-                              "type": "EXPENSE",
-                              "amount": 1,
-                              "date": "%s"
-                            }
-                        """.formatted(LocalDate.now())))
+                                    {
+                                      "type": "EXPENSE",
+                                      "amount": 1,
+                                      "date": "%s"
+                                    }
+                                """.formatted(LocalDate.now())))
                 .andExpect(status().isNotFound());
     }
 

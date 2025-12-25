@@ -1,9 +1,9 @@
 package com.example.finance_tracker.controllers;
 
 import com.example.finance_tracker.dtos.CreateUserRequest;
-import com.example.finance_tracker.security.AuthenticationFacade;
 import com.example.finance_tracker.dtos.LoginRequest;
 import com.example.finance_tracker.dtos.TokenResponse;
+import com.example.finance_tracker.security.AuthenticationFacade;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;

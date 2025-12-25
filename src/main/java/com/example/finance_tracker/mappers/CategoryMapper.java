@@ -18,5 +18,6 @@ public interface CategoryMapper {
     CategoryEntity toEntity(Category model);
 
     Category toModel(CategoryRequest categoryRequest);
+
     CategoryResponse toResponse(Category category);
 }

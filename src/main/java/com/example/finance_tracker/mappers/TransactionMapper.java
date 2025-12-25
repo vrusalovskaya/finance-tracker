@@ -19,5 +19,6 @@ public interface TransactionMapper {
     TransactionEntity toEntity(Transaction model);
 
     Transaction toModel(TransactionRequest request);
+
     TransactionResponse toResponse(Transaction transaction);
 }

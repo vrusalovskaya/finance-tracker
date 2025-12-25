@@ -8,4 +8,5 @@ public record MonthlySummary(
         BigDecimal income,
         BigDecimal expense,
         BigDecimal balance
-) {}
+) {
+}

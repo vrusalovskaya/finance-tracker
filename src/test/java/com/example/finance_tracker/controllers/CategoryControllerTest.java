@@ -5,7 +5,8 @@ import com.example.finance_tracker.common.Type;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
 
-import static org.hamcrest.Matchers.*;
+import static org.hamcrest.Matchers.containsInAnyOrder;
+import static org.hamcrest.Matchers.hasSize;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -25,12 +26,12 @@ public class CategoryControllerTest extends BaseE2ETest {
                         .header("Authorization", "Bearer " + token)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
-                            {
-                              "name": "Food",
-                              "type": "EXPENSE",
-                              "description": "Groceries"
-                            }
-                        """))
+                                    {
+                                      "name": "Food",
+                                      "type": "EXPENSE",
+                                      "description": "Groceries"
+                                    }
+                                """))
                 .andExpect(status().isCreated())
                 .andExpect(header().exists("Location"))
                 .andExpect(jsonPath("$.id").exists())
@@ -48,10 +49,10 @@ public class CategoryControllerTest extends BaseE2ETest {
                         .header("Authorization", "Bearer " + token)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
-                            {
-                              "type": "EXPENSE"
-                            }
-                        """))
+                                    {
+                                      "type": "EXPENSE"
+                                    }
+                                """))
                 .andExpect(status().isBadRequest());
     }
 
@@ -63,11 +64,11 @@ public class CategoryControllerTest extends BaseE2ETest {
                         .header("Authorization", "Bearer " + token)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
-                            {
-                              "name": "Food",
-                              "type": "INVALID"
-                            }
-                        """))
+                                    {
+                                      "name": "Food",
+                                      "type": "INVALID"
+                                    }
+                                """))
                 .andExpect(status().isBadRequest());
     }
 
@@ -119,11 +120,11 @@ public class CategoryControllerTest extends BaseE2ETest {
                         .header("Authorization", "Bearer " + token)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
-                            {
-                              "name": "Restaurants",
-                              "type": "EXPENSE"
-                            }
-                        """))
+                                    {
+                                      "name": "Restaurants",
+                                      "type": "EXPENSE"
+                                    }
+                                """))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.name").value("Restaurants"));
     }
@@ -138,10 +139,10 @@ public class CategoryControllerTest extends BaseE2ETest {
                         .header("Authorization", "Bearer " + token)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
-                            {
-                              "type": "EXPENSE"
-                            }
-                        """))
+                                    {
+                                      "type": "EXPENSE"
+                                    }
+                                """))
                 .andExpect(status().isBadRequest());
     }
 
@@ -156,11 +157,11 @@ public class CategoryControllerTest extends BaseE2ETest {
                         .header("Authorization", "Bearer " + attackerToken)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
-                            {
-                              "name": "Hack",
-                              "type": "EXPENSE"
-                            }
-                        """))
+                                    {
+                                      "name": "Hack",
+                                      "type": "EXPENSE"
+                                    }
+                                """))
                 .andExpect(status().isNotFound());
     }
 

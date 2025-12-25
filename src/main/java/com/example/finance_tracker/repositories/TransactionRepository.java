@@ -32,7 +32,9 @@ public interface TransactionRepository extends JpaRepository<TransactionEntity, 
                 WHERE t.userEntity.id = :userId
                   AND (:from IS NULL OR t.date >= :from)
                   AND (:to IS NULL OR t.date <= :to)
+                ORDER BY t.date DESC
             """)
+
     @EntityGraph(attributePaths = {"categoryEntity", "userEntity"})
     List<TransactionEntity> findByUserAndDateRange(@Param("userId") Long userId,
                                                    @Param("from") LocalDate from,

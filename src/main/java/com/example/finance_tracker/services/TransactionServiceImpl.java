@@ -75,8 +75,7 @@ public class TransactionServiceImpl implements TransactionService {
     public void delete(Long transactionId, Long userId) {
         if (transactionRepository.existsByIdAndUserEntityId(transactionId, userId)) {
             transactionRepository.deleteById(transactionId);
-        }
-        else {
+        } else {
             throw new ResourceNotFoundException(
                     "Transaction with id " + transactionId + " was not found for user with id " + userId);
         }
@@ -141,7 +140,7 @@ public class TransactionServiceImpl implements TransactionService {
     }
 
     private void validateDates(LocalDate startDate, LocalDate endDate) {
-        if (startDate!= null && startDate.isAfter(endDate)) {
+        if (startDate != null && startDate.isAfter(endDate)) {
             throw new ValidationException("Start date for filtration cannot be after end date");
         }
     }

@@ -6,4 +6,5 @@ import java.time.YearMonth;
 public record MonthlyTrend(
         YearMonth month,
         BigDecimal total
-) {}
+) {
+}

@@ -6,4 +6,5 @@ public record CategorySummary(
         Long categoryId,
         String categoryName,
         BigDecimal total
-) {}
+) {
+}

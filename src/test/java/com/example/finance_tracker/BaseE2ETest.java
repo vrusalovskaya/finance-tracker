@@ -120,20 +120,19 @@ public abstract class BaseE2ETest {
                         .header("Authorization", "Bearer " + token)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
-                        {
-                          "type": "%s",
-                          "amount": %d,
-                          "date": "%s",
-                          "categoryId": %d
-                        }
-                    """.formatted(type, amount, date, categoryId)))
+                                    {
+                                      "type": "%s",
+                                      "amount": %d,
+                                      "date": "%s",
+                                      "categoryId": %d
+                                    }
+                                """.formatted(type, amount, date, categoryId)))
                 .andReturn()
                 .getResponse()
                 .getContentAsString();
 
         return extractId(response);
     }
-
 
 
     protected Long extractId(String json) throws Exception {
