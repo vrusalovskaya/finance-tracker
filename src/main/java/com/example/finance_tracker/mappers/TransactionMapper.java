@@ -14,10 +14,6 @@ public interface TransactionMapper {
     @Mapping(source = "userEntity.id", target = "userId")
     Transaction toModel(TransactionEntity entity);
 
-    @Mapping(target = "categoryEntity", ignore = true)
-    @Mapping(target = "userEntity", ignore = true)
-    TransactionEntity toEntity(Transaction model);
-
     Transaction toModel(TransactionRequest request);
 
     TransactionResponse toResponse(Transaction transaction);

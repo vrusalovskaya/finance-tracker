@@ -35,8 +35,8 @@ public class AuthenticationFacadeImpl implements AuthenticationFacade {
     @Override
     @Transactional
     public String register(String userName, String email, String rawPassword) {
-        userService.create(userName, email, rawPassword);
+        var user = userService.create(userName, email, rawPassword);
 
-        return login(email, rawPassword);
+        return login(user.getEmail(), rawPassword);
     }
 }

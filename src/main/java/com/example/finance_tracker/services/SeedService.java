@@ -37,8 +37,6 @@ public class SeedService {
         createTransactions(user, categories);
     }
 
-    // ---------------- USERS ----------------
-
     private UserEntity createUser() {
         UserEntity user = new UserEntity();
         user.setUserName("john_doe");
@@ -47,8 +45,6 @@ public class SeedService {
 
         return userRepository.save(user);
     }
-
-    // ---------------- CATEGORIES ----------------
 
     private List<CategoryEntity> createCategories(UserEntity user) {
         List<CategoryEntity> categories = List.of(
@@ -77,8 +73,6 @@ public class SeedService {
         c.setUserEntity(user);
         return c;
     }
-
-    // ---------------- TRANSACTIONS ----------------
 
     private void createTransactions(UserEntity user, List<CategoryEntity> categories) {
 

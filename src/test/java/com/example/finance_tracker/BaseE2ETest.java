@@ -108,7 +108,7 @@ public abstract class BaseE2ETest {
         return extractId(response);
     }
 
-    protected Long createTransaction(
+    protected void createTransaction(
             String token,
             Long categoryId,
             int amount,
@@ -131,7 +131,7 @@ public abstract class BaseE2ETest {
                 .getResponse()
                 .getContentAsString();
 
-        return extractId(response);
+        extractId(response);
     }
 
 

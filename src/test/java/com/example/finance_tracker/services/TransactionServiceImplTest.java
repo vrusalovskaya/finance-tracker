@@ -21,7 +21,6 @@ import java.time.LocalDate;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -134,13 +133,5 @@ class TransactionServiceImplTest {
 
         assertDoesNotThrow(() -> transactionService.create(transaction));
         verify(transactionRepository).save(any(TransactionEntity.class));
-    }
-
-    @Test
-    void update() {
-    }
-
-    @Test
-    void delete() {
     }
 }

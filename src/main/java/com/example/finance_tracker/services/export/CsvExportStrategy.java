@@ -31,9 +31,9 @@ public class CsvExportStrategy implements ExportStrategy {
         }
 
         csv.append("\n");
-        csv.append("Income,,," + totals.getIncome()).append("\n");
-        csv.append("Expense,,," + totals.getExpense()).append("\n");
-        csv.append("Balance,,," + totals.getBalance()).append("\n");
+        csv.append("Income,,,").append(totals.getIncome()).append("\n");
+        csv.append("Expense,,,").append(totals.getExpense()).append("\n");
+        csv.append("Balance,,,").append(totals.getBalance()).append("\n");
 
         return new ExportFile(
                 csv.toString().getBytes(StandardCharsets.UTF_8),
