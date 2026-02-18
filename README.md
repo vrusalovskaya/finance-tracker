@@ -1,7 +1,8 @@
 # 💰 Finance Tracker API
 
-A backend REST API for personal finance tracking built with **Java 21** and **Spring Boot**.  
-The application allows users to manage income and expense categories, record transactions, generate financial reports, and **export data in PDF and CSV formats**.
+A backend REST API for personal finance tracking built with **Java 21** and **Spring Boot**.
+
+The application allows users to manage income and expense categories, record financial transactions, generate reports, and export data in **PDF** and **CSV** formats. The project is designed with clean architecture, security best practices, Dockerized infrastructure, and reliable integration testing.
 
 ---
 
@@ -23,17 +24,26 @@ The application allows users to manage income and expense categories, record tra
 
 ## 🛠 Tech Stack
 
-- **Java 21**
-- **Spring Boot 4**
-- **Spring Security**
-- **Spring Data JPA**
-- **JWT (JSON Web Tokens)**
-- **Hibernate**
-- **PostgreSQL**
-- **Maven**
-- **JUnit 5**
-- **MockMvc**
+**Backend**
+- Java 21
+- Spring Boot
+- Spring Security
+- Spring Data JPA
+- Hibernate
+- JWT (JSON Web Tokens)
 
+**Database**
+- MySQL (Dockerized for local development)
+
+**Build & Testing**
+- Maven
+- JUnit 5
+- MockMvc
+- Testcontainers
+
+**DevOps**
+- Docker
+- Dockerfile for application deployment
 ---
 
 ## 📐 Architecture
@@ -95,36 +105,79 @@ The application supports **exporting financial reports in PDF and CSV formats**.
   
 ---
 
+
 ## 🧪 Testing
 
-The project includes **End-to-End** tests using `MockMvc`:
+### Integration Tests (Testcontainers)
+
+- Uses real MySQL containers during test execution
+- No in-memory databases or mocks
+- Ensures production-like behavior
+
+Covers:
+- Database interaction
+- Repository and service logic
+- Security constraints
+
+---
+
+### End-to-End Tests (MockMvc)
+
 - Real HTTP requests
 - JWT authentication in tests
-- Database interaction verification
 - Positive and negative scenarios
 
-Tests ensure:
-- Security restrictions are enforced
-- Users cannot access or export other users' data
-- Report and export calculations are correct
+Ensures:
+- Authorization rules are enforced
+- Users cannot access other users’ data
+- Reports and exports are calculated correctly
+
+---
+
+## 🐳 Docker & Local Infrastructure
+
+### MySQL in Docker
+
+For local development, MySQL runs inside Docker.
+
+Benefits:
+- No local database installation required
+- Consistent database version across environments
+- Easy setup for new developers
+
+Example:
+```bash
+docker compose up -d
+```
+
+### 🐳 Application Dockerfile
+
+The project includes a **Dockerfile** suitable for application deployment.
+
+Key characteristics:
+- Multi-stage build
+- Lightweight runtime image
+- Compatible with CI/CD pipelines
 
 ---
 
 ## ⚙️ Configuration
 
-### Application Properties
+### Environment-Based Configuration
 
-The project uses **`application.properties`** for configuration.
+Sensitive data is **not committed** to version control.
 
-- `application.properties` – default configuration (committed to GitHub)
-- `application-test.properties` – test environment (**not pushed to GitHub**)
+Configuration files:
+- `application.properties` — base configuration (committed)
+- `application-local.properties` — local overrides (ignored)
+- `application-test.properties` — Testcontainers configuration (ignored)
 
-Example configuration (`application.properties`):
+Example (`application.properties`):
 
 ```properties
-spring.datasource.url=jdbc:postgresql://localhost:5432/finance_tracker
-spring.datasource.username=postgres
-spring.datasource.password=postgres
+spring.datasource.url=${DB_URL}
+spring.datasource.username=${DB_USER}
+spring.datasource.password=${DB_PASSWORD}
 
 spring.jpa.hibernate.ddl-auto=validate
 ```
@@ -140,7 +193,9 @@ cd finance-tracker
 
 ### 2. Start MySQL
 
-Ensure MySQL is running and the database exists.
+```bash
+docker compose up -d
+```
 
 ### 3. Run the application
 ```bash
