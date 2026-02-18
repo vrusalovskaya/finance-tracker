@@ -72,10 +72,4 @@ generated/
 
 # environment files (never commit)
 .env
-.env.*
-application-local.properties
-application-local.yml
-application-dev.properties
-application-dev.yml
-application-test.properties
-application-test.yml
+*.env

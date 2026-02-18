@@ -1,0 +1,16 @@
+services:
+  db:
+    image: mysql:8.0
+    container_name: finance-db
+    environment:
+      MYSQL_DATABASE: finance_tracker_db
+      MYSQL_USER: finance_tracker_user
+      MYSQL_PASSWORD: password123
+      MYSQL_ROOT_PASSWORD: rootpassword
+    ports:
+        - "8188:3306"
+    volumes:
+      - mysql_data2:/var/lib/mysql
+
+volumes:
+  mysql_data2:
