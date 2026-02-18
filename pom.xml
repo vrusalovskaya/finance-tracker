@@ -32,7 +32,19 @@
 		<springdoc.version>3.0.0</springdoc.version>
 		<jjwt.version>0.13.0</jjwt.version>
 		<openpdf.version>3.0.0</openpdf.version>
+		<testcontainers.version>2.0.3</testcontainers.version>
 	</properties>
+	<dependencyManagement>
+		<dependencies>
+			<dependency>
+				<groupId>org.testcontainers</groupId>
+				<artifactId>testcontainers-bom</artifactId>
+				<version>${testcontainers.version}</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
 	<dependencies>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -132,6 +144,24 @@
 			<artifactId>openpdf</artifactId>
 			<version>${openpdf.version}</version>
 		</dependency>
+
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-testcontainers</artifactId>
+			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.testcontainers</groupId>
+			<artifactId>testcontainers-mysql</artifactId>
+			<scope>test</scope>
+		</dependency>
+
+<!--		<dependency>-->
+<!--			<groupId>org.testcontainers</groupId>-->
+<!--			<artifactId>testcontainers-junit-jupiter</artifactId>-->
+<!--			<scope>test</scope>-->
+<!--		</dependency>-->
 
 	</dependencies>
 

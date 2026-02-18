@@ -22,8 +22,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 
 @SpringBootTest
-@ActiveProfiles("test")
-@Import(JacksonTestConfig.class)
+@ActiveProfiles("it")
+@Import({JacksonTestConfig.class, MySQLTestContainerConfiguration.class})
 public abstract class BaseE2ETest {
 
     @Autowired
